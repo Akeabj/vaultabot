@@ -1,0 +1,576 @@
+/* ==============================================================
+   VAULTA DESIGN SYSTEM
+   One token set drives every screen — home, coin picker, amount,
+   summary, prices, orders, settings — so the whole app reads as
+   one product, not a home screen bolted onto an old UI.
+================================================================= */
+:root {
+  --vaulta-bg: #000000;
+  --vaulta-card: #1c1c1e;
+  --vaulta-card-2: #2c2c2e;
+  --vaulta-border: rgba(255, 255, 255, 0.08);
+
+  --vaulta-text: #f5f5f7;
+  --vaulta-text-secondary: #98989f;
+  --vaulta-text-tertiary: #636366;
+
+  --vaulta-gold: #d4af6a;
+  --vaulta-gold-soft: rgba(212, 175, 106, 0.14);
+  --vaulta-gold-press: #c9a15c;
+  --vaulta-gold-shadow: rgba(212, 175, 106, 0.18);
+  --vaulta-gold-on: #16130a; /* text/icon color used on solid-gold surfaces */
+
+  --vaulta-success: #32d74b;
+  --vaulta-danger: #ff453a;
+
+  --vaulta-radius-lg: 20px;
+  --vaulta-radius-md: 14px;
+  --vaulta-radius-sm: 10px;
+
+  --vaulta-space-xs: 6px;
+  --vaulta-space-sm: 10px;
+  --vaulta-space-md: 14px;
+  --vaulta-space-lg: 20px;
+  --vaulta-space-xl: 28px;
+
+  --vaulta-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --vaulta-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+
+  color-scheme: dark;
+
+  /* Short aliases used throughout the rest of this file */
+  --bg: var(--vaulta-bg);
+  --surface: var(--vaulta-card);
+  --surface-2: var(--vaulta-card-2);
+  --hairline: var(--vaulta-border);
+  --text: var(--vaulta-text);
+  --text-secondary: var(--vaulta-text-secondary);
+  --text-tertiary: var(--vaulta-text-tertiary);
+  --accent: var(--vaulta-gold);
+  --accent-soft: var(--vaulta-gold-soft);
+  --accent-press: var(--vaulta-gold-press);
+  --accent-shadow: var(--vaulta-gold-shadow);
+  --accent-on: var(--vaulta-gold-on);
+  --danger: var(--vaulta-danger);
+  --success: var(--vaulta-success);
+  --radius-lg: var(--vaulta-radius-lg);
+  --radius-md: var(--vaulta-radius-md);
+  --radius-sm: var(--vaulta-radius-sm);
+}
+
+:root[data-theme="light"] {
+  --vaulta-bg: #f2f2f7;
+  --vaulta-card: #ffffff;
+  --vaulta-card-2: #f2f2f7;
+  --vaulta-border: rgba(0, 0, 0, 0.08);
+
+  --vaulta-text: #1c1c1e;
+  --vaulta-text-secondary: #6c6c70;
+  --vaulta-text-tertiary: #a1a1a6;
+
+  --vaulta-gold: #ab7f2e;
+  --vaulta-gold-soft: rgba(171, 127, 46, 0.12);
+  --vaulta-gold-press: #9c722a;
+  --vaulta-gold-shadow: rgba(171, 127, 46, 0.18);
+  --vaulta-gold-on: #16130a;
+
+  --vaulta-success: #248a3d;
+  --vaulta-danger: #d70015;
+
+  color-scheme: light;
+}
+
+/* ==============================
+   Reset / base — also fixes the
+   iOS zoom-on-tap / zoom-on-focus issues
+================================= */
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  touch-action: manipulation;      /* stops double-tap-to-zoom on buttons */
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+button, input {
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+#app {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: calc(var(--vaulta-space-lg) + env(safe-area-inset-top)) 16px calc(var(--vaulta-space-xl) + env(safe-area-inset-bottom));
+  min-height: 100vh;
+}
+
+/* ==============================
+   Icons (shared across every screen)
+================================= */
+.icon { width: 20px; height: 20px; display: block; flex: 0 0 auto; }
+.icon-chevron { width: 17px; height: 17px; }
+.icon-back { width: 16px; height: 16px; color: var(--accent); }
+.icon-sparkle { width: 16px; height: 16px; color: var(--accent-on); }
+.icon-shield { width: 16px; height: 16px; color: var(--accent); }
+
+/* ==============================
+   Screens & transitions
+================================= */
+.screen { display: none; }
+.screen.active {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vaulta-space-md);
+  animation: screen-in 0.22s var(--vaulta-ease);
+}
+
+@keyframes screen-in {
+  from { opacity: 0; transform: translateY(6px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ==============================
+   Home header
+================================= */
+.home-header {
+  padding: 4px 2px 6px;
+}
+
+.home-title {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  color: var(--text);
+  line-height: 1.05;
+}
+
+.home-subtitle {
+  margin: 8px 0 0;
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.home-subtitle .accent-word { color: var(--accent); font-weight: 600; }
+
+/* ==============================
+   Section label (reused: Popular Coins, Settings groups)
+================================= */
+.section-block { display: flex; flex-direction: column; gap: var(--vaulta-space-sm); }
+
+.section-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0 4px;
+}
+
+/* ==============================
+   Popular Coins cards
+================================= */
+.coin-card-row {
+  display: flex;
+  gap: var(--vaulta-space-sm);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+.coin-card-row::-webkit-scrollbar { display: none; }
+
+.coin-card {
+  flex: 1 1 0;
+  min-width: 100px;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  padding: 18px 10px 16px;
+  box-shadow: var(--vaulta-shadow-card);
+  transition: transform 0.12s var(--vaulta-ease);
+}
+.coin-card:active { transform: scale(0.96); }
+
+.coin-card-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+
+.coin-card-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--surface-2);
+  margin-bottom: 2px;
+}
+
+.coin-card-symbol { font-size: 15px; font-weight: 700; color: var(--text); }
+.coin-card-price { font-size: 15.5px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--text); }
+
+.coin-card-change {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 12.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.coin-card-change.positive { color: var(--success); }
+.coin-card-change.negative { color: var(--danger); }
+.coin-card-change.neutral { color: var(--text-tertiary); }
+
+.coin-card-change .arrow { width: 0; height: 0; border-left: 3.5px solid transparent; border-right: 3.5px solid transparent; }
+.coin-card-change.positive .arrow { border-bottom: 5px solid var(--success); }
+.coin-card-change.negative .arrow { border-top: 5px solid var(--danger); margin-top: 2px; }
+.coin-card-change.neutral .arrow { display: none; }
+
+/* ==============================
+   Buttons (shared gold styling: home CTA + Continue + Pay with Stars)
+================================= */
+.btn-gold-base {
+  background: var(--accent);
+  color: var(--accent-on);
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 20px var(--accent-shadow), 0 1px 2px rgba(0, 0, 0, 0.4);
+  transition: transform 0.12s var(--vaulta-ease), box-shadow 0.12s ease, background-color 0.12s ease;
+}
+.btn-gold-base:active {
+  transform: scale(0.97);
+  background: var(--accent-press);
+  box-shadow: 0 4px 10px var(--accent-shadow);
+}
+
+.btn {
+  padding: 15px;
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.12s var(--vaulta-ease), opacity 0.12s ease, background-color 0.12s ease;
+}
+.btn:active { transform: scale(0.97); }
+.btn.primary { background: var(--accent); color: var(--accent-on); font-weight: 700; box-shadow: 0 8px 20px var(--accent-shadow), 0 1px 2px rgba(0, 0, 0, 0.4); }
+.btn.primary:active { background: var(--accent-press); box-shadow: 0 4px 10px var(--accent-shadow); }
+
+.cta-buy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 18px 20px;
+  border: none;
+  border-radius: var(--radius-lg);
+  background: var(--accent);
+  color: var(--accent-on);
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 20px var(--accent-shadow), 0 1px 2px rgba(0, 0, 0, 0.4);
+  transition: transform 0.12s var(--vaulta-ease), box-shadow 0.12s ease, background-color 0.12s ease;
+}
+.cta-buy:active {
+  transform: scale(0.97);
+  background: var(--accent-press);
+  box-shadow: 0 4px 10px var(--accent-shadow);
+}
+.cta-buy-content { display: flex; align-items: center; gap: 10px; }
+
+/* ==============================
+   Secondary navigation rows
+================================= */
+.nav-stack { display: flex; flex-direction: column; gap: var(--vaulta-space-sm); }
+
+.nav-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 15px 16px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  color: var(--text);
+  font-size: 15.5px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.12s var(--vaulta-ease);
+}
+.nav-row:active { background: var(--surface-2); transform: scale(0.985); }
+
+.nav-row-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+.nav-row-icon .icon { width: 17px; height: 17px; }
+
+.nav-row-label { flex: 1; text-align: left; }
+.nav-row-chevron { color: var(--text-tertiary); }
+
+/* ==============================
+   Brand tagline (bottom of home)
+================================= */
+.brand-tagline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin-top: var(--vaulta-space-md);
+  padding: 4px 0 2px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+}
+
+/* ==============================
+   Nav bar (back + title) — used by every non-home screen
+================================= */
+.navbar {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  margin-bottom: 4px;
+}
+
+.nav-title {
+  flex: 1;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text);
+}
+
+.nav-back, .nav-spacer {
+  flex: 0 0 auto;
+  min-width: 64px;
+}
+
+.nav-back {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 15px;
+  padding: 6px 2px;
+  cursor: pointer;
+  transition: opacity 0.12s ease;
+}
+.nav-back:active { opacity: 0.5; }
+
+/* ==============================
+   Grouped list (iOS-style rows) — coin picker, prices, orders
+================================= */
+.grouped-list {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--hairline);
+  box-shadow: var(--vaulta-shadow-card);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  min-height: 52px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--hairline);
+  width: 100%;
+  text-align: left;
+  color: var(--text);
+  font-size: 15.5px;
+}
+.row:last-child { border-bottom: none; }
+
+.row-tap { cursor: pointer; transition: background-color 0.15s ease; }
+.row-tap:active { background: var(--surface-2); }
+
+.row-title { flex: 1; font-weight: 400; }
+
+.row-text { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.row-text .row-title { font-size: 15.5px; }
+
+.row-sub { font-size: 12.5px; color: var(--text-secondary); }
+.row-value { font-variant-numeric: tabular-nums; color: var(--text-secondary); font-size: 14.5px; }
+.row-chevron { color: var(--text-tertiary); font-size: 17px; line-height: 1; }
+
+/* Coin monogram badge (coin picker + live prices rows — smaller than the home cards) */
+.coin-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  color: var(--accent);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+/* Status dot for orders */
+.status-dot { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 auto; }
+.status-dot.status-pending { background: var(--text-tertiary); }
+.status-dot.status-paid { background: var(--accent); }
+.status-dot.status-completed { background: var(--success); }
+.status-dot.status-cancelled { background: var(--danger); }
+
+.row-value.status-pending { color: var(--text-secondary); }
+.row-value.status-paid { color: var(--accent); }
+.row-value.status-completed { color: var(--success); }
+.row-value.status-cancelled { color: var(--danger); }
+
+/* ==============================
+   Amount screen
+================================= */
+.amount-field { padding: 24px 0 8px; text-align: center; }
+
+#amount-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  text-align: center;
+  font-size: 44px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.5px;
+  outline: none;
+  -moz-appearance: textfield;
+}
+#amount-input::placeholder { color: var(--text-tertiary); }
+
+/* ==============================
+   Detail card (order summary breakdown)
+================================= */
+.detail-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--hairline);
+  padding: 4px 16px;
+  box-shadow: var(--vaulta-shadow-card);
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--hairline);
+  font-size: 14.5px;
+}
+.detail-row:last-child { border-bottom: none; }
+
+.detail-row .label { color: var(--text-secondary); }
+.detail-row .value { font-variant-numeric: tabular-nums; font-weight: 500; color: var(--text); }
+
+.detail-row.total .label, .detail-row.total .value { font-size: 16.5px; font-weight: 700; color: var(--text); }
+.detail-row.stars .value { color: var(--accent); font-weight: 700; }
+
+/* ==============================
+   Inputs / labels
+================================= */
+.field-label { font-size: 12.5px; color: var(--text-secondary); padding: 0 2px; margin-top: 2px; }
+
+.text-input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 16px;             /* keep >=16px to prevent iOS auto-zoom on focus */
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+.text-input:focus { border-color: var(--accent); }
+.text-input::placeholder { color: var(--text-tertiary); }
+
+/* ==============================
+   Settings
+================================= */
+.settings-group { display: flex; flex-direction: column; gap: 8px; }
+
+.segmented {
+  display: flex;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  padding: 3px;
+  gap: 3px;
+}
+
+.segment {
+  flex: 1;
+  padding: 9px 0;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.segment.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+
+/* ==============================
+   Misc
+================================= */
+.error { color: var(--danger); font-size: 13px; min-height: 16px; margin: 0; padding: 0 2px; }
+
+.loading-text, .empty-text {
+  padding: 20px 16px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  text-align: center;
+}

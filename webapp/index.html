@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="color-scheme" id="color-scheme-meta" content="dark">
+<title>Vaulta</title>
+<script>
+  // Applied synchronously, before the stylesheet paints anything, so there's
+  // no flash of the wrong theme on load.
+  (function () {
+    try {
+      var theme = localStorage.getItem("vaulta_theme") || "dark";
+      document.documentElement.setAttribute("data-theme", theme);
+    } catch (e) {}
+  })();
+</script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- MENU / HOME -->
+    <section id="screen-menu" class="screen active">
+      <div class="home-header">
+        <h1 class="home-title">Vaulta</h1>
+        <p class="home-subtitle" data-i18n="brandSubtitle">Buy crypto with Stars.</p>
+      </div>
+
+      <div class="section-block">
+        <div class="section-label" data-i18n="popularCoins">Popular Coins</div>
+        <div id="popular-coins" class="coin-card-row"></div>
+      </div>
+
+      <button class="cta-buy" id="btn-buy">
+        <span class="cta-buy-content">
+          <svg class="icon icon-sparkle" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L14.2 9.3L21.5 12L14.2 14.7L12 22L9.8 14.7L2.5 12L9.8 9.3Z"/></svg>
+          <span data-i18n="buyCryptoCta">Buy Crypto with Stars</span>
+        </span>
+        <svg class="icon icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5L15 12L9 19"/></svg>
+      </button>
+
+      <div class="nav-stack">
+        <button class="nav-row" id="btn-prices">
+          <span class="nav-row-icon">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16L10 10L14 13L20 5"/><path d="M15 5H20V10"/></svg>
+          </span>
+          <span class="nav-row-label" data-i18n="livePrices">Live Prices</span>
+          <svg class="icon icon-chevron nav-row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5L15 12L9 19"/></svg>
+        </button>
+        <button class="nav-row" id="btn-orders">
+          <span class="nav-row-icon">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8H15M9 12H15M9 16H12"/></svg>
+          </span>
+          <span class="nav-row-label" data-i18n="myOrders">My Orders</span>
+          <svg class="icon icon-chevron nav-row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5L15 12L9 19"/></svg>
+        </button>
+        <button class="nav-row" id="btn-settings">
+          <span class="nav-row-icon">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7H20M4 12H20M4 17H20"/><circle cx="9" cy="7" r="1.5" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="7" cy="17" r="1.5" fill="currentColor" stroke="none"/></svg>
+          </span>
+          <span class="nav-row-label" data-i18n="settings">Settings</span>
+          <svg class="icon icon-chevron nav-row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5L15 12L9 19"/></svg>
+        </button>
+      </div>
+
+      <div class="brand-tagline">
+        <svg class="icon icon-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3L19 6V11C19 15.5 16 19 12 21C8 19 5 15.5 5 11V6L12 3Z"/>
+          <path d="M9 12L11 14L15 9.5"/>
+        </svg>
+        <span data-i18n="brandTagline">Fast. Secure. Simple.</span>
+      </div>
+    </section>
+
+    <!-- COINS -->
+    <section id="screen-coins" class="screen">
+      <nav class="navbar">
+        <button class="nav-back" data-back="menu" aria-label="Back">
+          <svg class="icon icon-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5L9 12L15 19"/></svg>
+          <span data-i18n="back">Back</span>
+        </button>
+        <h2 class="nav-title" data-i18n="chooseCoin">Choose a Coin</h2>
+        <span class="nav-spacer"></span>
+      </nav>
+      <div id="coin-list" class="grouped-list"></div>
+    </section>
+
+    <!-- AMOUNT -->
+    <section id="screen-amount" class="screen">
+      <nav class="navbar">
+        <button class="nav-back" data-back="coins" aria-label="Back">
+          <svg class="icon icon-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5L9 12L15 19"/></svg>
+          <span data-i18n="back">Back</span>
+        </button>
+        <h2 class="nav-title" id="amount-coin-title"></h2>
+        <span class="nav-spacer"></span>
+      </nav>
+
+      <div class="amount-field">
+        <input type="text" id="amount-input" placeholder="0.0" inputmode="decimal" autocomplete="off" autocorrect="off" spellcheck="false">
+      </div>
+      <p class="error" id="amount-error"></p>
+      <button class="btn primary" id="btn-quote" data-i18n="continue">Continue</button>
+    </section>
+
+    <!-- SUMMARY -->
+    <section id="screen-summary" class="screen">
+      <nav class="navbar">
+        <button class="nav-back" data-back="amount" aria-label="Back">
+          <svg class="icon icon-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5L9 12L15 19"/></svg>
+          <span data-i18n="back">Back</span>
+        </button>
+        <h2 class="nav-title" data-i18n="orderSummary">Order Summary</h2>
+        <span class="nav-spacer"></span>
+      </nav>
+
+      <div id="summary-box" class="detail-card"></div>
+
+      <div class="field-label" data-i18n="walletAddress">Wallet Address</div>
+      <input type="text" id="wallet-input" class="text-input" data-i18n-placeholder="walletPlaceholder" placeholder="Paste your wallet address">
+      <p class="error" id="summary-error"></p>
+      <button class="btn primary" id="btn-pay" data-i18n="payWithStars">Pay with Stars ⭐</button>
+    </section>
+
+    <!-- PRICES -->
+    <section id="screen-prices" class="screen">
+      <nav class="navbar">
+        <button class="nav-back" data-back="menu" aria-label="Back">
+          <svg class="icon icon-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5L9 12L15 19"/></svg>
+          <span data-i18n="back">Back</span>
+        </button>
+        <h2 class="nav-title" data-i18n="livePrices">Live Prices</h2>
+        <span class="nav-spacer"></span>
+      </nav>
+      <div id="prices-box" class="grouped-list"></div>
+    </section>
+
+    <!-- ORDERS -->
+    <section id="screen-orders" class="screen">
+      <nav class="navbar">
+        <button class="nav-back" data-back="menu" aria-label="Back">
+          <svg class="icon icon-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5L9 12L15 19"/></svg>
+          <span data-i18n="back">Back</span>
+        </button>
+        <h2 class="nav-title" data-i18n="myOrders">My Orders</h2>
+        <span class="nav-spacer"></span>
+      </nav>
+      <div id="orders-box" class="grouped-list"></div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="screen-settings" class="screen">
+      <nav class="navbar">
+        <button class="nav-back" data-back="menu" aria-label="Back">
+          <svg class="icon icon-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5L9 12L15 19"/></svg>
+          <span data-i18n="back">Back</span>
+        </button>
+        <h2 class="nav-title" data-i18n="settings">Settings</h2>
+        <span class="nav-spacer"></span>
+      </nav>
+
+      <div class="settings-group">
+        <div class="section-label" data-i18n="language">Language</div>
+        <div class="segmented" id="lang-segmented">
+          <button class="segment" data-value="en" data-i18n="english">English</button>
+          <button class="segment" data-value="ru" data-i18n="russian">Russian</button>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="section-label" data-i18n="appearance">Appearance</div>
+        <div class="segmented" id="theme-segmented">
+          <button class="segment" data-value="dark" data-i18n="dark">Dark</button>
+          <button class="segment" data-value="light" data-i18n="light">Light</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
